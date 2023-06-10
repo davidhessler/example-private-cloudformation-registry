@@ -1,0 +1,42 @@
+name: 'build-test'
+on: # rebuild any PRs and main branch changes
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'CODEOWNERS'
+      - '.gitignore'
+      - 'dist/**'
+env:
+  AWS_REGION: 'us-west-2'
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          npm install
+      - run: |
+          npm run all
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v2.1.0
+        with:
+          role-to-assume: 'arn:aws:iam::819163596280:role/GitHubPublishActionRole'
+          role-session-name: 'GitHub_to_AWS_via_FederatedOIDC'
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: davidhessler/publish-cfn-guard-registry@v1.0.0
+        with: 
+          MappingsDirectory: mappings
+          MarkAsLatest: false
+          RuleRegistryBucket: cfn-guard-registry-819163596280
