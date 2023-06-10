@@ -31,4 +31,4 @@ jobs:
         with: 
           MappingsDirectory: mappings
           MarkAsLatest: false
-          RuleRegistryBucket: test-guard-bucket
+          RuleRegistryBucket: cfn-guard-registry-819163596280
