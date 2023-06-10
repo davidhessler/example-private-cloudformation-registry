@@ -1,0 +1,44 @@
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    LAMBDA_RUNTIME_CHECK
+#
+# Description:
+#    Checks if the AWS Lambda function uses recommended language runtime
+#
+# Reports on:
+#    AWS::Lambda::Function
+#
+# Evaluates:
+#    AWS CloudFormation,  AWS CloudFormation Hook
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when no AWS Lambda functions are present
+# b) PASS: when all AWS Lambda functions use python3.10 runtime
+# c) FAIL: when any AWS Lambda permission does not use python3.10 runtime
+
+#
+# Select all AWS Lambda Function resources from incoming template (payload)
+#
+let lambda_functions = Resources.*[
+	Type == "AWS::Lambda::Function"
+]
+
+rule LAMBDA_RUNTIME_CHECK when %lambda_functions !empty {
+	%lambda_functions {
+		Properties {
+			when Runtime exists {
+				Runtime in ["python3.10"] 
+        <<
+          Violation: Lambda function is using an obsolete runtime.
+          Fix: Change runtime to "python3.10"
+        >>
+			}
+		}
+	}
+}

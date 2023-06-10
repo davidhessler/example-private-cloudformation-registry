@@ -1,0 +1,14 @@
+{
+  "owner": "David Hessler",
+  "version": "1.0.0",
+  "description":"This is a custom rule registry that ensure the latest versions of lambda runtime are used",
+  "contact": "dhhessl@amazon.com",
+  "mappings": [
+    {
+      "guardFilePath": "rules/python_runtime_check.guard",
+      "controls": [
+        "LatestRuntime"
+      ]
+    }
+  ]
+}
