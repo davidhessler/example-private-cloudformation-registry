@@ -1,5 +1,6 @@
 {
   "owner": "David Hessler",
+  "ruleSetName": "MyRuleSet",
   "version": "1.0.0",
   "description":"This is a custom rule registry that ensure the latest versions of lambda runtime are used",
   "contact": "dhhessl@amazon.com",
