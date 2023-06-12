@@ -3,13 +3,13 @@
 ##           Gherkin               ##
 #####################################
 # Rule Identifier:
-#    LAMBDA_RUNTIME_CHECK
+#    SERVERLESS_RUNTIME_CHECK
 #
 # Description:
-#    Checks if the AWS Lambda function uses recommended language runtime
+#    Checks if the AWS AWS Serverless function uses recommended language runtime
 #
 # Reports on:
-#    AWS::Lambda::Function
+#    AWS::Serverless::Function
 #
 # Evaluates:
 #    AWS CloudFormation,  AWS CloudFormation Hook
@@ -18,27 +18,21 @@
 #    NA
 #
 # Scenarios:
-# a) SKIP: when no AWS Lambda functions are present
-# b) PASS: when all AWS Lambda functions use python3.10 runtime
-# c) FAIL: when any AWS Lambda permission does not use python3.10 runtime
+# a) SKIP: when no AWS Serverless functions are present
+# b) PASS: when all AWS Serverless functions use python3.10 runtime
+# c) FAIL: when any AWS Serverless functino is set to python3.10 runtime
 
 #
-# Select all AWS Lambda Function resources from incoming template (payload)
+# Select all AWS Serverless Function resources from incoming template (payload)
 #
-let lambda_functions = Resources.*[
-	Type == "AWS::Lambda::Function"
+let serverless_functions = Resources.*[
+	Type == "AWS::Serverless::Function"
 ]
 
-rule LAMBDA_RUNTIME_CHECK when %lambda_functions !empty {
-	%lambda_functions {
-		Properties {
-			when Runtime exists {
-				Runtime in ["python3.10"] 
-        <<
-          Violation: Lambda function is using an obsolete runtime.
-          Fix: Change runtime to "python3.10"
-        >>
-			}
-		}
-	}
+rule SERVERLESS_RUNTIME_CHECK when %serverless_functions !empty {
+	%serverless_functions.Properties.Runtime in ["python3.10"] 
+	<<
+	  Violation: Lambda function is using an obsolete runtime.
+	  Fix: Change runtime to "python3.10"
+	>>
 }
