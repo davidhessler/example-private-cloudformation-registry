@@ -10,6 +10,12 @@
       "controls": [
         "LatestRuntime"
       ]
+    },
+    {
+      "guardFilePath": "rules/serverless_tags_check.guard",
+      "controls": [
+        "TagsConfigured"
+      ]
     }
   ]
 }
