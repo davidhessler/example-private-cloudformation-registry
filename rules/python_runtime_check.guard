@@ -19,8 +19,8 @@
 #
 # Scenarios:
 # a) SKIP: when no AWS Serverless functions are present
-# b) PASS: when all AWS Serverless functions use python3.10 runtime
-# c) FAIL: when any AWS Serverless functino is set to python3.10 runtime
+# b) PASS: when all AWS Serverless functions use python3.9 runtime
+# c) FAIL: when any AWS Serverless functino is set to python3.9 runtime
 
 #
 # Select all AWS Serverless Function resources from incoming template (payload)
@@ -30,9 +30,9 @@ let serverless_functions = Resources.*[
 ]
 
 rule SERVERLESS_RUNTIME_CHECK when %serverless_functions !empty {
-	%serverless_functions.Properties.Runtime in ["python3.10"] 
+	%serverless_functions.Properties.Runtime in ["python3.9"] 
 	<<
 	  Violation: Lambda function is using an obsolete runtime.
-	  Fix: Change runtime to "python3.10"
+	  Fix: Change runtime to "python3.9"
 	>>
 }
