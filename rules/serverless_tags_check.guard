@@ -1,0 +1,37 @@
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    SERVERLESS_TAGS_CHECK
+#
+# Description:
+#    Checks if the AWS AWS Serverless function uses recommended language runtime
+#
+# Reports on:
+#    AWS::Serverless::Function
+#
+# Evaluates:
+#    AWS CloudFormation,  AWS CloudFormation Hook
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when no AWS Serverless functions are present
+# b) PASS: when all AWS Serverless functions have tags
+
+#
+# Select all AWS Serverless Function resources from incoming template (payload)
+#
+let serverless_functions = Resources.*[
+	Type == "AWS::Serverless::Function"
+]
+
+rule SERVERLESS_TAGS_CHECK when %serverless_functions !empty {
+	%serverless_functions.Properties.Tags exists
+	<<
+	Violation: Lambda function is not configured with a resource owner tag.
+	Fix: Add the appropriate resource owner tag to the lambda function.
+	>>
+}
